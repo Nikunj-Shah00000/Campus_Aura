@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: aura-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: aura-campus
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - aura-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: aura-redis
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - aura-network
+
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aura-backend
+    restart: always
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://admin:${MONGO_PASSWORD}@mongodb:27017/aura-campus?authSource=admin
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - aura-network
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  aura-network:
+    driver: bridge

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Eunoia Nexus — Sentient Campus | AI Wellness Oracle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  font-family: 'Space Grotesk', monospace;
+  background: #050b1a;
+  overflow-x: hidden;
+  color: #eef5ff;
+}
+
+/* animated bg gradient orbs */
+#bg-orb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  background: radial-gradient(circle at 20% 30%, #0f172a, #020617);
+}
+
+.glow-orb {
+  position: fixed;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,172,254,0.2), transparent);
+  filter: blur(80px);
+  animation: floatOrb 18s infinite alternate;
+  z-index: -1;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(-10%, -10%) scale(1); opacity: 0.3; }
+  100% { transform: translate(15%, 20%) scale(1.3); opacity: 0.6; }
+}
+
+.glass-morph {
+  background: rgba(15, 25, 45, 0.55);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(90, 150, 255, 0.3);
+  border-radius: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(90, 150, 255, 0.2) inset;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+
+/* hero section 3d text */
+.hero {
+  text-align: center;
+  padding: 3rem 0 4rem;
+  position: relative;
+}
+
+.glitch-text {
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #A5F0FF, #7B5CF5, #FF9A9E);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite, floatText 3s ease-in-out infinite;
+  text-shadow: 0 0 15px rgba(123,92,245,0.5);
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes floatText {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.sub {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  letter-spacing: 2px;
+  margin-top: 0.5rem;
+}
+
+/* ripple button */
+.ripple-btn {
+  background: linear-gradient(90deg, #3b82f6, #a855f7);
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 60px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+  font-size: 1rem;
+}
+
+.ripple-btn:active {
+  transform: scale(0.96);
+}
+
+/* floating cards */
+.floating-card {
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.floating-card:hover {
+  transform: translateY(-12px) scale(1.01);
+}
+
+/* radial holographic shield */
+.shield-vortex {
+  width: 200px;
+  height: 200px;
+  background: conic-gradient(from 0deg, #00c6ff, #0072ff, #a855f7, #00c6ff);
+  border-radius: 50%;
+  animation: spinShield 8s linear infinite, levitate 3s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 60px rgba(0,114,255,0.6);
+}
+
+@keyframes spinShield {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes levitate {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+/* mood pods */
+.mood-pod {
+  background: rgba(20, 30, 55, 0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 2rem;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.mood-pod.active {
+  border: 2px solid #a855f7;
+  background: rgba(168,85,247,0.2);
+  box-shadow: 0 0 25px #a855f7;
+  transform: scale(1.02);
+}
+
+/* dashboard cubes */
+.cube-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-neon {
+  flex: 1;
+  padding: 1.2rem;
+  border-radius: 1.5rem;
+  background: rgba(0,0,0,0.3);
+  transition: 0.2s;
+}
+
+/* holographic line chart */
+.chart-container {
+  background: rgba(0,0,0,0.3);
+  border-radius: 1.5rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+/* AI emotion wave */
+.waveform {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 60px;
+}
+.wave-bar {
+  width: 8px;
+  height: 20px;
+  background: #00e0ff;
+  border-radius: 4px;
+  animation: wave 1s ease-in-out infinite;
+}
+@keyframes wave {
+  0%,100% { height: 15px; }
+  50% { height: 45px; }
+}
+
+/* floating particles */
+.particle-field {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.tier-glow {
+  transition: all 0.2s;
+  border-left: 4px solid;
+}
+.tier-1 { border-left-color: #10b981; }
+.tier-2 { border-left-color: #f59e0b; }
+.tier-3 { border-left-color: #ef4444; }
+
+/* animated number counter */
+.count-up {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, #a5f0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* responsive */
+@media (max-width: 780px) {
+  .glitch-text { font-size: 2.8rem; }
+  .container { padding: 0.8rem; }
+  .mood-pod { padding: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="bg-orb"></div>
+<div class="glow-orb" style="top: -10%; left: -10%; background: radial-gradient(circle, #3b82f6, transparent);"></div>
+<div class="glow-orb" style="bottom: -20%; right: -10%; background: radial-gradient(circle, #a855f7, transparent); animation-duration: 25s;"></div>
+
+<div class="particle-field" id="particleField"></div>
+
+<main>
+  <div class="container">
+    <!-- HERO section with 3D interactive tilt -->
+    <div class="hero" id="heroScene">
+      <div class="glitch-text">EUNOIA NEXUS</div>
+      <p class="sub">✦ autonomous emotional intelligence ✦ federated soul protocol ✦</p>
+      <div style="margin-top: 2rem;">
+        <button class="ripple-btn" id="heroPulseBtn"><i class="fas fa-sync-alt"></i> SYNCHRONIZE AURA</button>
+      </div>
+    </div>
+
+    <!-- PRIVACY SHIELD (Holographic) -->
+    <section id="privacySection" style="margin: 6rem 0;">
+      <div style="display: flex; flex-wrap: wrap; gap: 3rem; align-items: center; justify-content: center;">
+        <div class="shield-vortex">
+          <i class="fas fa-shield-halved" style="font-size: 5rem; color: white; filter: drop-shadow(0 0 12px cyan); animation: pulse 2s infinite;"></i>
+        </div>
+        <div style="max-width: 400px;">
+          <h2 style="font-size: 2rem;">ZERO TRUST <span style="color:#a855f7;">→ ZERO PII</span></h2>
+          <p style="margin: 1rem 0;">Federated Learning • Homomorphic Encryption • On-device aggregation. Your emotional signature, forever anonymous.</p>
+          <div class="toggle-list" style="display: flex; gap: 2rem; margin-top: 1.5rem;">
+            <label style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-lock"></i> Anon Core <input type="checkbox" checked disabled style="accent-color:#a855f7;"></label>
+            <label style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-chart-line"></i> Differential Privacy <input type="checkbox" checked disabled style="accent-color:#a855f7;"></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOOD ORACLE - EMOTIONAL WEATHER (interactive 3D style) -->
+    <section id="moodOracle" style="margin: 5rem 0;">
+      <h2 style="text-align: center; font-size: 2.5rem;">🌀 emotional synesthesia</h2>
+      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 3rem 0;" id="moodGrid">
+        <div class="mood-pod" data-mood="radiant"><i class="fas fa-sun" style="font-size: 2rem;"></i><br>Radiant</div>
+        <div class="mood-pod" data-mood="breeze"><i class="fas fa-cloud-sun" style="font-size: 2rem;"></i><br>Breeze</div>
+        <div class="mood-pod" data-mood="mist"><i class="fas fa-cloud-rain" style="font-size: 2rem;"></i><br>Mist</div>
+        <div class="mood-pod" data-mood="storm"><i class="fas fa-bolt" style="font-size: 2rem;"></i><br>Storm</div>
+        <div class="mood-pod" data-mood="void"><i class="fas fa-moon" style="font-size: 2rem;"></i><br>Void</div>
+      </div>
+      <div style="text-align: center;">
+        <button class="ripple-btn" id="submitMoodBtn"><i class="fas fa-feather-alt"></i> imprint resonance</button>
+      </div>
+      <div id="moodFeedback" style="text-align: center; margin-top: 1rem; font-size: 0.9rem; opacity: 0;"></div>
+    </section>
+
+    <!-- LIVE HOLOGRAPHIC DASHBOARD + AI EMOTION WAVE -->
+    <section style="margin: 5rem 0;">
+      <h2 style="text-align: center;">🌌 campus neural constellation</h2>
+      <div class="glass-morph" style="padding: 1.5rem;">
+        <canvas id="constellationCanvasAdvanced" style="width:100%; height:380px; border-radius: 1rem; background: rgba(0,0,0,0.25);"></canvas>
+        <div class="cube-stats" style="margin-top: 1.5rem;">
+          <div class="stat-neon glass-morph">
+            <i class="fas fa-heartbeat"></i> <span id="distressRate">4.2</span>% distress signal
+            <div class="waveform"><div class="wave-bar" style="animation-delay:0s"></div><div class="wave-bar" style="animation-delay:0.2s"></div><div class="wave-bar" style="animation-delay:0.4s"></div><div class="wave-bar" style="animation-delay:0.6s"></div></div>
+          </div>
+          <div class="stat-neon glass-morph">
+            <i class="fas fa-brain"></i> AI Synaptic Confidence
+            <div class="count-up" id="aiConfidence">97.3</div>%
+          </div>
+          <div class="stat-neon glass-morph">
+            <i class="fas fa-users"></i> Active Ether Checkins
+            <div class="count-up" id="activeCheckins">1847</div>
+          </div>
+        </div>
+        <div class="chart-container" id="sentimentTrend">
+           <div style="display: flex; justify-content: space-between;"><span>sentiment flux</span><span id="trendArrow"><i class="fas fa-arrow-up" style="color:#10b981;"></i> +8.2%</span></div>
+           <canvas id="trendCanvas" width="600" height="100" style="width:100%; height:90px; margin-top: 10px;"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIERED INTERVENTION (HOLOGRAM ACCORDION) -->
+    <section style="margin: 5rem 0;">
+      <h2>⚡ resonant intervention matrix</h2>
+      <div class="tier-accordion" id="tierAccordion" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="glass-morph tier-glow tier-1" data-tier="1" style="padding: 1.5rem; cursor: pointer;">
+          <div style="display: flex; justify-content: space-between;"><span><i class="fas fa-seedling"></i> TIER I — KINETIC RESOURCES</span><i class="fas fa-chevron-down chevron-icon"></i></div>
+          <div class="tierContent" style="max-height: 0; overflow: hidden; transition: 0.4s;">🎧 Guided microbreaks • Adaptive focus music • Light bloom notifications (opt‑in). Auto-trigger on mild dips.</div>
+        </div>
+        <div class="glass-morph tier-glow tier-2" data-tier="2" style="padding: 1.5rem; cursor: pointer;">
+          <div style="display: flex; justify-content: space-between;"><span><i class="fas fa-hand-holding-heart"></i> TIER II — COUNSELOR NEXUS</span><i class="fas fa-chevron-down chevron-icon"></i></div>
+          <div class="tierContent" style="max-height: 0; overflow: hidden; transition: 0.4s;">🌿 Anonymous peer‑to‑peer warmth • Live heatmap of support groups • Secure chat bubbles.</div>
+        </div>
+        <div class="glass-morph tier-glow tier-3" data-tier="3" style="padding: 1.5rem; cursor: pointer;">
+          <div style="display: flex; justify-content: space-between;"><span><i class="fas fa-shield-alt"></i> TIER III — CRYSTAL BYPASS</span><i class="fas fa-chevron-down chevron-icon"></i></div>
+          <div class="tierContent" style="max-height: 0; overflow: hidden; transition: 0.4s;">🚨 24/7 crisis line • Non‑intrusive pathway • human‑in‑loop always. Highest privacy protection.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COSMIC TUNING FORK -->
+    <div style="text-align: center; padding: 3rem 0;">
+      <button class="ripple-btn" id="galacticSync"><i class="fas fa-spa"></i> launch collective sync</button>
+    </div>
+  </div>
+  <footer style="text-align: center; padding: 2rem; opacity: 0.6;">✧ ethical intelligence • decentralized empathy • open consciousness ✧</footer>
+</main>
+
+<script>
+  // --------------------------------------------------------------
+  // FULLY INNOVATIVE + MAXIMAL ANIMATIONS + 3D / PARTICLE FIELD
+  // --------------------------------------------------------------
+  gsap.registerPlugin(ScrollTrigger);
+  
+  // Particle system on mousemove
+  const particleField = document.getElementById('particleField');
+  document.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.85) {
+      const particle = document.createElement('div');
+      particle.style.position = 'fixed';
+      particle.style.left = e.clientX + 'px';
+      particle.style.top = e.clientY + 'px';
+      particle.style.width = '4px';
+      particle.style.height = '4px';
+      particle.style.background = `hsl(${Math.random() * 60 + 200}, 80%, 70%)`;
+      particle.style.borderRadius = '50%';
+      particle.style.pointerEvents = 'none';
+      particle.style.zIndex = 9999;
+      particle.style.filter = 'blur(1px)';
+      document.body.appendChild(particle);
+      gsap.to(particle, {
+        x: (Math.random() - 0.5) * 120,
+        y: (Math.random() - 0.5) * 80 - 40,
+        opacity: 0,
+        scale: 0,
+        duration: 1.2,
+        ease: 'power2.out',
+        onComplete: () => particle.remove()
+      });
+    }
+  });
+  
+  // Hero button + glitch effect
+  document.getElementById('heroPulseBtn').addEventListener('click', () => {
+    gsap.to('.glitch-text', { scale: 1.05, duration: 0.15, yoyo: true, repeat: 3, ease: "rough" });
+    const btn = document.getElementById('heroPulseBtn');
+    gsap.fromTo(btn, { boxShadow: '0 0 0px #a855f7' }, { boxShadow: '0 0 30px #a855f7', duration: 0.6, yoyo: true, repeat: 1 });
+    // Create confetti stars
+    for(let i=0;i<40;i++) {
+      let star = document.createElement('div');
+      star.innerHTML = '✦';
+      star.style.position = 'fixed';
+      star.style.left = Math.random() * window.innerWidth + 'px';
+      star.style.top = '70%';
+      star.style.color = '#facc15';
+      star.style.fontSize = Math.random() * 20 + 10 + 'px';
+      star.style.pointerEvents = 'none';
+      star.style.opacity = 0.9;
+      document.body.appendChild(star);
+      gsap.to(star, { y: -Math.random() * 300 - 100, opacity: 0, duration: 1.5, ease: 'back.out', onComplete: () => star.remove() });
+    }
+  });
+  
+  // Mood selection + 3d tilt active
+  let selectedMood = null;
+  const moodPods = document.querySelectorAll('.mood-pod');
+  moodPods.forEach(pod => {
+    pod.addEventListener('click', function() {
+      moodPods.forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      selectedMood = this.getAttribute('data-mood');
+      gsap.to(this, { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1, ease: "elastic.out(1,0.5)" });
+      // ripple on icon
+      let icon = this.querySelector('i');
+      if(icon) gsap.to(icon, { rotation: 10, scale: 1.2, duration: 0.2, yoyo: true, repeat: 1 });
+    });
+  });
+  
+  // Submit mood + loader + particle burst + update stats dynamically
+  const submitBtn = document.getElementById('submitMoodBtn');
+  const moodFeedback = document.getElementById('moodFeedback');
+  submitBtn.addEventListener('click', () => {
+    if(!selectedMood) {
+      gsap.to(submitBtn, { x: [ -5,5,-5,5,0], duration: 0.3 });
+      moodFeedback.innerText = '✧ select your emotional frequency first ✧';
+      gsap.to(moodFeedback, { opacity: 1, duration: 0.5, yoyo: true, repeat: 1, delay: 1 });
+      return;
+    }
+    // animate loader simulation 
+    const fakeLoader = document.createElement('div');
+    fakeLoader.style.position = 'fixed';
+    fakeLoader.style.top = '0'; fakeLoader.style.left='0'; fakeLoader.style.width='100%'; fakeLoader.style.height='100%';
+    fakeLoader.style.background = 'rgba(0,0,0,0.7)';
+    fakeLoader.style.backdropFilter = 'blur(12px)';
+    fakeLoader.style.display = 'flex';
+    fakeLoader.style.alignItems = 'center';
+    fakeLoader.style.justifyContent = 'center';
+    fakeLoader.style.zIndex = '10000';
+    fakeLoader.style.flexDirection = 'column';
+    fakeLoader.innerHTML = `<div style="width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,#a855f7,#3b82f6);animation:pulseScale 1.5s infinite;"></div><p style="margin-top:1rem;">encrypting emotion → federated model...</p>`;
+    document.body.appendChild(fakeLoader);
+    const styleAnim = document.createElement('style');
+    styleAnim.innerHTML = `@keyframes pulseScale { 0% { transform: scale(0.6); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 1; } }`;
+    document.head.appendChild(styleAnim);
+    
+    setTimeout(() => {
+      fakeLoader.remove();
+      // update stats with animation
+      let currActive = parseInt(document.getElementById('activeCheckins').innerText);
+      let newActive = currActive + Math.floor(Math.random() * 28) + 12;
+      animateNumber('activeCheckins', currActive, newActive);
+      let currDistress = parseFloat(document.getElementById('distressRate').innerText);
+      let newDistress = (currDistress + (selectedMood === 'storm' || selectedMood === 'void' ? 0.6 : -0.3)).toFixed(1);
+      if(newDistress < 1.2) newDistress = 1.2;
+      if(newDistress > 9) newDistress = 8.5;
+      animateFloat('distressRate', currDistress, parseFloat(newDistress));
+      let currConf = parseFloat(document.getElementById('aiConfidence').innerText);
+      let newConf = Math.min(99.2, currConf + (Math.random() * 0.8 - 0.1));
+      animateNumber('aiConfidence', currConf, newConf, true);
+      
+      // Show mood ripple effect
+      spawnGalacticRings(submitBtn);
+      moodFeedback.innerText = `✨ imprint captured: ${selectedMood} resonance added to collective mind ✨`;
+      gsap.to(moodFeedback, { opacity: 1, duration: 0.8, yoyo: true, repeat: 1, delay: 1.2 });
+      
+      // update trend canvas
+      updateTrendCanvas();
+      
+      // add new node to constellation with mood influence
+      addConstellationStar(selectedMood);
+    }, 1600);
+  });
+  
+  function animateNumber(id, from, to, isFloat = false) {
+    let obj = { val: from };
+    gsap.to(obj, { duration: 1.2, val: to, ease: "power2.out", onUpdate: () => {
+      let val = isFloat ? obj.val.toFixed(1) : Math.floor(obj.val);
+      document.getElementById(id).innerText = val;
+    } });
+  }
+  function animateFloat(id, from, to) {
+    let obj = { val: from };
+    gsap.to(obj, { duration: 1, val: to, onUpdate: () => document.getElementById(id).innerText = obj.val.toFixed(1) });
+  }
+  
+  function spawnGalacticRings(el) {
+    const rect = el.getBoundingClientRect();
+    for(let i=0;i<18;i++) {
+      let ring = document.createElement('div');
+      ring.style.position = 'fixed';
+      ring.style.left = rect.left + rect.width/2 + 'px';
+      ring.style.top = rect.top + rect.height/2 + 'px';
+      ring.style.width = '8px'; ring.style.height = '8px';
+      ring.style.borderRadius = '50%';
+      ring.style.background = `radial-gradient(circle, #${['a855f7','3b82f6','f97316'][Math.floor(Math.random()*3)]}, transparent)`;
+      ring.style.pointerEvents = 'none';
+      ring.style.zIndex = 10001;
+      document.body.appendChild(ring);
+      gsap.to(ring, { scale: 18, opacity: 0, duration: 1.2, ease: "power2.out", onComplete: () => ring.remove() });
+    }
+  }
+  
+  // ---- advanced constellation canvas with dynamic nodes and mood effect ----
+  const canvasAdv = document.getElementById('constellationCanvasAdvanced');
+  const ctxAdv = canvasAdv.getContext('2d');
+  let widthAdv, heightAdv;
+  let stars = [];
+  let mouseAdv = { x: -200, y: -200 };
+  
+  function resizeAdv() {
+    widthAdv = canvasAdv.width = canvasAdv.clientWidth;
+    heightAdv = canvasAdv.height = canvasAdv.clientHeight;
+    canvasAdv.width = widthAdv;
+    canvasAdv.height = heightAdv;
+    initStars(42);
+  }
+  function initStars(count) {
+    stars = [];
+    for(let i=0; i<count; i++) {
+      stars.push({
+        x: Math.random() * widthAdv, y: Math.random() * heightAdv,
+        vx: (Math.random() - 0.5) * 0.6, vy: (Math.random() - 0.5) * 0.6,
+        radius: 2 + Math.random() * 4,
+        glow: Math.random() > 0.8,
+        pulse: Math.random() * Math.PI * 2,
+        distressMod: 0
+      });
+    }
+  }
+  window.addEventListener('resize', () => { resizeAdv(); });
+  resizeAdv();
+  canvasAdv.addEventListener('mousemove', (e) => {
+    const rect = canvasAdv.getBoundingClientRect();
+    mouseAdv.x = e.clientX - rect.left;
+    mouseAdv.y = e.clientY - rect.top;
+  });
+  canvasAdv.addEventListener('mouseleave', () => { mouseAdv.x = -200; mouseAdv.y = -200; });
+  
+  function addConstellationStar(moodType) {
+    let distressVal = (moodType === 'storm' || moodType === 'void') ? 1 : (moodType === 'mist' ? 0.5 : 0);
+    stars.push({
+      x: Math.random() * widthAdv, y: Math.random() * heightAdv,
+      vx: (Math.random() - 0.5)*0.8, vy: (Math.random() - 0.5)*0.8,
+      radius: 4, glow: true, pulse: 0, distressMod: distressVal, isNew: true
+    });
+    gsap.to({}, { duration: 0, onComplete: () => { if(stars.length > 80) stars.shift(); } });
+  }
+  
+  function drawConstellationAdv() {
+    if(!ctxAdv) return;
+    ctxAdv.clearRect(0, 0, widthAdv, heightAdv);
+    ctxAdv.fillStyle = "rgba(0,0,0,0.2)";
+    ctxAdv.fillRect(0,0,widthAdv,heightAdv);
+    // draw links
+    for(let i=0; i<stars.length; i++) {
+      stars[i].x += stars[i].vx;
+      stars[i].y += stars[i].vy;
+      if(stars[i].x < 0 || stars[i].x > widthAdv) stars[i].vx *= -1;
+      if(stars[i].y < 0 || stars[i].y > heightAdv) stars[i].vy *= -1;
+      stars[i].pulse += 0.03;
+      for(let j=i+1; j<stars.length; j++) {
+        let dx = stars[i].x - stars[j].x;
+        let dy = stars[i].y - stars[j].y;
+        let dist = Math.hypot(dx,dy);
+        if(dist < 110) {
+          ctxAdv.beginPath();
+          ctxAdv.moveTo(stars[i].x, stars[i].y);
+          ctxAdv.lineTo(stars[j].x, stars[j].y);
+          ctxAdv.strokeStyle = `rgba(130, 170, 255, ${0.2 * (1 - dist/150)})`;
+          ctxAdv.stroke();
+        }
+      }
+    }
+    stars.forEach(s => {
+      let intensity = 0.5 + Math.sin(s.pulse) * 0.3;
+      let color = s.distressMod > 0.6 ? `rgba(242, 120, 150, ${intensity+0.2})` : `rgba(100, 180, 255, ${intensity+0.3})`;
+      ctxAdv.beginPath();
+      ctxAdv.arc(s.x, s.y, s.radius * (Math.hypot(mouseAdv.x - s.x, mouseAdv.y - s.y) < 35 ? 1.6 : 1), 0, Math.PI*2);
+      ctxAdv.fillStyle = color;
+      ctxAdv.fill();
+      if(s.glow) {
+        ctxAdv.shadowBlur = 12; ctxAdv.shadowColor = "#a855f7";
+        ctxAdv.fill();
+        ctxAdv.shadowBlur = 0;
+      }
+    });
+    requestAnimationFrame(drawConstellationAdv);
+  }
+  drawConstellationAdv();
+  
+  // Trend Canvas dynamic update
+  const trendCanvas = document.getElementById('trendCanvas');
+  const trendCtx = trendCanvas.getContext('2d');
+  let trendData = [32, 38, 44, 42, 48, 55, 60, 58, 62, 70, 68, 75, 72, 78, 82];
+  function updateTrendCanvas() {
+    trendCanvas.width = trendCanvas.clientWidth;
+    trendCanvas.height = 90;
+    trendCtx.clearRect(0,0,trendCanvas.width,trendCanvas.height);
+    trendCtx.beginPath();
+    let step = trendCanvas.width / (trendData.length -1);
+    trendCtx.moveTo(0, trendCanvas.height - (trendData[0]/100)*trendCanvas.height);
+    for(let i=1;i<trendData.length;i++) {
+      let x = i*step;
+      let y = trendCanvas.height - (trendData[i]/100)*trendCanvas.height;
+      trendCtx.lineTo(x,y);
+    }
+    trendCtx.strokeStyle = '#a855f7';
+    trendCtx.lineWidth = 3;
+    trendCtx.stroke();
+    trendCtx.shadowBlur = 5;
+    // fill gradient
+    trendCtx.lineTo(trendCanvas.width, trendCanvas.height);
+    trendCtx.lineTo(0, trendCanvas.height);
+    trendCtx.fillStyle = 'rgba(168,85,247,0.15)';
+    trendCtx.fill();
+    trendData.push(Math.min(92, trendData[trendData.length-1] + (Math.random() * 6) - 2));
+    if(trendData.length > 18) trendData.shift();
+    setTimeout(() => updateTrendCanvas(), 4000);
+  }
+  updateTrendCanvas();
+  
+  // interactive accordion with smooth 3d animation
+  const tiers = document.querySelectorAll('[data-tier]');
+  tiers.forEach(tier => {
+    tier.addEventListener('click', (e) => {
+      const content = tier.querySelector('.tierContent');
+      const chev = tier.querySelector('.chevron-icon');
+      const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+      if(isOpen) {
+        gsap.to(content, { maxHeight: 0, duration: 0.4, ease: "power2.inOut" });
+        gsap.to(chev, { rotation: 0, duration: 0.3 });
+      } else {
+        gsap.to(content, { maxHeight: 200, duration: 0.6, ease: "back.out(0.7)" });
+        gsap.to(chev, { rotation: 180, duration: 0.3 });
+      }
+    });
+  });
+  
+  // Galactic sync button: mass particle animation 
+  document.getElementById('galacticSync').addEventListener('click', () => {
+    for(let i=0;i<120;i++) {
+      let orb = document.createElement('div');
+      orb.style.position = 'fixed';
+      orb.style.width = '12px';
+      orb.style.height = '12px';
+      orb.style.background = `radial-gradient(circle, #ffb347, #ff4d4d)`;
+      orb.style.borderRadius = '50%';
+      orb.style.left = Math.random() * window.innerWidth + 'px';
+      orb.style.top = Math.random() * window.innerHeight + 'px';
+      orb.style.pointerEvents = 'none';
+      orb.style.zIndex = 10000;
+      document.body.appendChild(orb);
+      gsap.to(orb, { scale: 0, y: -200, opacity: 0, duration: 1.2 + Math.random()*0.8, ease: 'back.in', onComplete: () => orb.remove() });
+    }
+    gsap.to('.glass-morph', { scale: 1.02, duration: 0.3, yoyo: true, repeat: 1, stagger: 0.03 });
+  });
+  
+  // section entrance animations
+  gsap.utils.toArray('section').forEach(sec => {
+    gsap.from(sec, { scrollTrigger: { trigger: sec, start: "top 85%" }, opacity: 0, y: 50, duration: 0.9, ease: "power3.out" });
+  });
+  
+  // initial ripples on counters
+  setTimeout(() => {
+    animateNumber('activeCheckins', 1200, 1847);
+    animateFloat('distressRate', 3.1, 4.2);
+    animateNumber('aiConfidence', 93.2, 97.3, true);
+  }, 600);
+  
+</script>
+</body>
+</html>

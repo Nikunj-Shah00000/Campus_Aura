@@ -1,0 +1,45 @@
+aura-campus-backend/
+├── package.json
+├── .env
+├── .gitignore
+├── README.md
+├── server.js
+├── app/
+│   ├── api/
+│   │   ├── routes/
+│   │   │   ├── mood.js
+│   │   │   ├── privacy.js
+│   │   │   ├── stats.js
+│   │   │   └── intervention.js
+│   │   └── middleware/
+│   │       ├── auth.js
+│   │       ├── rateLimit.js
+│   │       └── encryption.js
+│   ├── models/
+│   │   ├── MoodCheckin.js
+│   │   ├── PrivacySettings.js
+│   │   ├── InterventionLog.js
+│   │   └── CampusStats.js
+│   ├── services/
+│   │   ├── federatedLearning.js
+│   │   ├── encryptionService.js
+│   │   ├── sentimentAnalysis.js
+│   │   └── websocketManager.js
+│   ├── controllers/
+│   │   ├── moodController.js
+│   │   ├── statsController.js
+│   │   └── privacyController.js
+│   └── utils/
+│       ├── anonymizer.js
+│       ├── validators.js
+│       └── constants.js
+├── config/
+│   ├── database.js
+│   ├── redis.js
+│   └── websocket.js
+├── scripts/
+│   ├── seedData.js
+│   └── federatedTraining.js
+└── docker/
+    ├── Dockerfile
+    └── docker-compose.yml
